@@ -1,5 +1,5 @@
 let logs = [];
-const MAX_LOGS = 20;
+const MAX_LOGS = 30;
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
