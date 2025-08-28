@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>🧾 Syllinse Logs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #eee;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #1c1c1c;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background: #222;
+      color: #9b59b6;
+    }
+    tr:nth-child(even) {
+      background: #181818;
+    }
+    tr:hover {
+      background: #2a2a2a;
+    }
+    .big-find {
+      background: #3b0d0d !important;
+      color: #ff4d4d;
+      font-weight: bold;
+    }
+    a {
+      color: #4da6ff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧾 Syllinse Logs</h1>
+  <table id="logTable">
+    <thead>
+      <tr>
+        <th>🐾 Pet</th>
+        <th>👥 Players</th>
+        <th>📜 Gen</th>
+        <th>✨ Traits</th>
+        <th>🧬 Mutation</th>
+        <th>🆔 Job ID</th>
+        <th>🔗 Join</th>
+        <th>⏰ Time</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    async function fetchLogs() {
+      try {
+        const res = await fetch("/api/log");
+        const logs = await res.json();
+        const tbody = document.querySelector("#logTable tbody");
+        tbody.innerHTML = "";
+
+        logs.forEach(log => {
+          const row = document.createElement("tr");
+
+          if (parseInt(log.finalGen, 10) >= 5000000) {
+            row.classList.add("big-find");
+          }
+
+          row.innerHTML = `
+            <td>${log.petName || "Unknown"}</td>
+            <td>${log.playerCount || 0}/8</td>
+            <td>${log.finalGen || "?"}</td>
+            <td>${log.traits || "None"}</td>
+            <td>${log.mutation || "None"}</td>
+            <td style="font-size:0.8em;">${log.jobId || "?"}</td>
+            <td><a href="${log.joinLink}" target="_blank">Join</a></td>
+            <td>${log.time || ""}</td>
+          `;
+
+          tbody.appendChild(row);
+        });
+      } catch (err) {
+        console.error("Error fetching logs:", err);
+      }
+    }
+
+    fetchLogs();
+    setInterval(fetchLogs, 5000);
+  </script>
+</body>
+</html>
