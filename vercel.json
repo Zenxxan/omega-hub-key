@@ -1,6 +1,0 @@
-
-{
-  "rewrites": [
-    { "source": "/getkey", "destination": "/getkey.html" }
-  ]
-}
