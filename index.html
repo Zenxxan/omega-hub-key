@@ -103,31 +103,38 @@
   <p id="lastUpdated">Last updated: --</p>
 
   <script>
-    function updateLogs(logs) {
-      const tbody = document.querySelector("#logs tbody");
-      tbody.innerHTML = ""; // clear old rows
+    async function fetchLogs() {
+      try {
+        const res = await fetch("/api/log");
+        const logs = await res.json();
 
-      logs.forEach(log => {
-        const row = document.createElement("tr");
-        const joinScript = log.joinScript || "-- no script provided";
+        const tbody = document.querySelector("#logs tbody");
+        tbody.innerHTML = ""; // clear old rows
 
-        row.innerHTML = `
-          <td>${log.petName || "Unknown"}</td>
-          <td>${log.jobId || "Unknown"}</td>
-          <td>${log.playerCount || "0/8"}</td>
-          <td>${log.traits || "None"}</td>
-          <td>${log.mutation || "None"}</td>
-          <td>${log.finalGen || "None"}</td>
-          <td>
-            <button class="copy" onclick="copyToClipboard(\`${joinScript}\`)">Copy</button>
-          </td>
-          <td>${log.time || ""}</td>
-        `;
-        tbody.appendChild(row);
-      });
+        logs.forEach(log => {
+          const row = document.createElement("tr");
+          const joinScript = log.joinScript || "-- no script provided";
 
-      document.getElementById("lastUpdated").innerText =
-        "Last updated: " + new Date().toLocaleTimeString();
+          row.innerHTML = `
+            <td>${log.petName || "Unknown"}</td>
+            <td>${log.jobId || "Unknown"}</td>
+            <td>${log.playerCount || "0/8"}</td>
+            <td>${log.traits || "None"}</td>
+            <td>${log.mutation || "None"}</td>
+            <td>${log.finalGen || "None"}</td>
+            <td>
+              <button class="copy" onclick="copyToClipboard(\`${joinScript}\`)">Copy</button>
+            </td>
+            <td>${log.time || ""}</td>
+          `;
+          tbody.appendChild(row);
+        });
+
+        document.getElementById("lastUpdated").innerText =
+          "Last updated: " + new Date().toLocaleTimeString();
+      } catch (err) {
+        console.error("Failed to fetch logs:", err);
+      }
     }
 
     function copyToClipboard(text) {
@@ -138,34 +145,16 @@
       });
     }
 
-    // ===== Real-time updates using Server-Sent Events (SSE) =====
-    if (!!window.EventSource) {
-      const evtSource = new EventSource("/api/log/stream"); // your SSE endpoint
+    // Initial load
+    fetchLogs();
 
-      evtSource.onmessage = function(event) {
-        try {
-          const logs = JSON.parse(event.data);
-          updateLogs(logs);
-        } catch (err) {
-          console.error("Failed to parse SSE logs:", err);
-        }
-      };
-
-      evtSource.onerror = function(err) {
-        console.error("SSE connection error:", err);
-      };
-    } else {
-      // fallback to polling every 2 seconds if SSE not supported
-      setInterval(async () => {
-        try {
-          const res = await fetch("/api/log");
-          const logs = await res.json();
-          updateLogs(logs);
-        } catch(err) {
-          console.error(err);
-        }
-      }, 2000);
-    }
+    // Auto refresh every 5 seconds
+    setInterval(fetchLogs, 5000);
   </script>
 </body>
 </html>
+
+
+
+
+
