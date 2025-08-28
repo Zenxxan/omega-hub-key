@@ -14,7 +14,30 @@
     }
     h1 {
       font-size: 2rem;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
+    }
+    .controls {
+      margin-bottom: 15px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    input, label {
+      font-size: 1rem;
+    }
+    input[type="text"] {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      background: #222;
+      color: #eee;
+    }
+    label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
     }
     table {
       width: 100%;
@@ -53,6 +76,14 @@
 </head>
 <body>
   <h1>🧾 Syllinse Logs</h1>
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="🔍 Search logs..." />
+    <label>
+      <input type="checkbox" id="bigFindsOnly" />
+      Show only 🚨 Big Finds
+    </label>
+  </div>
+
   <table id="logTable">
     <thead>
       <tr>
@@ -70,38 +101,62 @@
   </table>
 
   <script>
+    let allLogs = [];
+
     async function fetchLogs() {
       try {
         const res = await fetch("/api/log");
-        const logs = await res.json();
-        const tbody = document.querySelector("#logTable tbody");
-        tbody.innerHTML = "";
-
-        logs.forEach(log => {
-          const row = document.createElement("tr");
-
-          if (parseInt(log.finalGen, 10) >= 5000000) {
-            row.classList.add("big-find");
-          }
-
-          row.innerHTML = `
-            <td>${log.petName || "Unknown"}</td>
-            <td>${log.playerCount || 0}/8</td>
-            <td>${log.finalGen || "?"}</td>
-            <td>${log.traits || "None"}</td>
-            <td>${log.mutation || "None"}</td>
-            <td style="font-size:0.8em;">${log.jobId || "?"}</td>
-            <td><a href="${log.joinLink}" target="_blank">Join</a></td>
-            <td>${log.time || ""}</td>
-          `;
-
-          tbody.appendChild(row);
-        });
+        allLogs = await res.json();
+        renderLogs();
       } catch (err) {
         console.error("Error fetching logs:", err);
       }
     }
 
+    function renderLogs() {
+      const tbody = document.querySelector("#logTable tbody");
+      tbody.innerHTML = "";
+
+      const searchTerm = document.querySelector("#searchInput").value.toLowerCase();
+      const bigFindsOnly = document.querySelector("#bigFindsOnly").checked;
+
+      const filtered = allLogs.filter(log => {
+        const isBig = parseInt(log.finalGen, 10) >= 5000000;
+        if (bigFindsOnly && !isBig) return false;
+
+        const text = JSON.stringify(log).toLowerCase();
+        if (searchTerm && !text.includes(searchTerm)) return false;
+
+        return true;
+      });
+
+      filtered.forEach(log => {
+        const row = document.createElement("tr");
+
+        if (parseInt(log.finalGen, 10) >= 5000000) {
+          row.classList.add("big-find");
+        }
+
+        row.innerHTML = `
+          <td>${log.petName || "Unknown"}</td>
+          <td>${log.playerCount || 0}/8</td>
+          <td>${log.finalGen || "?"}</td>
+          <td>${log.traits || "None"}</td>
+          <td>${log.mutation || "None"}</td>
+          <td style="font-size:0.8em;">${log.jobId || "?"}</td>
+          <td><a href="${log.joinLink}" target="_blank">Join</a></td>
+          <td>${log.time || ""}</td>
+        `;
+
+        tbody.appendChild(row);
+      });
+    }
+
+    // Event listeners
+    document.querySelector("#searchInput").addEventListener("input", renderLogs);
+    document.querySelector("#bigFindsOnly").addEventListener("change", renderLogs);
+
+    // Initial + auto refresh
     fetchLogs();
     setInterval(fetchLogs, 5000);
   </script>
