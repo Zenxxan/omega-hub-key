@@ -6,51 +6,78 @@
   <title>Syllinse Notifier Logs</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f9;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #1e1e2f;
       margin: 0;
       padding: 20px;
+      color: #eee;
     }
+
     h1 {
       text-align: center;
-      color: #333;
+      color: #9b59b6;
+      text-shadow: 0 0 10px rgba(155, 89, 182, 0.8);
+      font-size: 2.2em;
+      margin-bottom: 20px;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
-      background: #fff;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background: #2b2b3c;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
     }
+
     th, td {
-      padding: 12px;
-      border: 1px solid #ddd;
+      padding: 14px;
+      border-bottom: 1px solid #3a3a4d;
       text-align: center;
+      font-size: 0.95em;
     }
+
     th {
       background: #9b59b6;
       color: #fff;
+      font-weight: bold;
+      letter-spacing: 0.5px;
     }
+
     tr:nth-child(even) {
-      background: #f9f9f9;
+      background: #242436;
     }
+
+    tr:hover {
+      background: #34344a;
+      transition: background 0.3s ease;
+    }
+
     button.copy {
-      padding: 5px 10px;
-      background: #9b59b6;
+      padding: 6px 12px;
+      background: linear-gradient(135deg, #9b59b6, #8e44ad);
       color: #fff;
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
       font-size: 12px;
+      box-shadow: 0 2px 6px rgba(155,89,182,0.4);
+      transition: all 0.25s ease;
     }
+
     button.copy:hover {
-      background: #8e44ad;
+      background: linear-gradient(135deg, #b06cd9, #9b59b6);
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(155,89,182,0.6);
     }
+
     #lastUpdated {
-      font-size: 12px;
-      color: gray;
-      margin-top: 10px;
+      font-size: 13px;
+      color: #aaa;
+      margin-top: 12px;
       text-align: right;
+      font-style: italic;
     }
   </style>
 </head>
@@ -112,7 +139,7 @@
 
     function copyToClipboard(text) {
       navigator.clipboard.writeText(text).then(() => {
-        alert("Join script copied!");
+        alert("✅ Join script copied!");
       }).catch(err => {
         console.error("Failed to copy:", err);
       });
