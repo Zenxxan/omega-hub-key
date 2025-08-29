@@ -129,12 +129,13 @@
           const joinScript = log.joinScript || "-- no script provided";
 
           
-          let playersDisplay = "0/8";
-          if (typeof log.playerCount === "object" && log.playerCount !== null) {
-            playersDisplay = `${log.playerCount.others}/${log.playerCount.total}`;
-          } else if (typeof log.playerCount === "string") {
-            playersDisplay = log.playerCount;
-          }
+        let playersDisplay = "0/8";
+        if (typeof log.playerCount === "object" && log.playerCount !== null) {
+           playersDisplay = `${log.playerCount.others}/8`; 
+        } else if (typeof log.playerCount === "string") {
+           playersDisplay = log.playerCount;
+        }
+
 
           row.innerHTML = `
             <td>${log.petName || "Unknown"}</td>
