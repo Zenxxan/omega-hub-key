@@ -1,5 +1,5 @@
 let logs = [];
-const MAX_LOG_AGE = 120 * 1000; 
+const MAX_LOG_AGE = 60 * 1000; 
 
 export default async function handler(req, res) {
   const now = Date.now();
