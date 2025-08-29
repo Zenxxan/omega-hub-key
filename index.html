@@ -7,7 +7,7 @@
   <style>
     body {
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: #1e1e2f;
+      background: #111; /* darker black background */
       margin: 0;
       padding: 20px;
       color: #eee;
@@ -15,9 +15,9 @@
 
     h1 {
       text-align: center;
-      color: #9b59b6;
-      text-shadow: 0 0 10px rgba(155, 89, 182, 0.8);
-      font-size: 2.2em;
+      color: #fff;
+      text-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+      font-size: 2.4em;
       margin-bottom: 20px;
     }
 
@@ -25,51 +25,64 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
-      background: #2b2b3c;
+      background: #1c1c1c;
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
     }
 
     th, td {
       padding: 14px;
-      border-bottom: 1px solid #3a3a4d;
+      border-bottom: 1px solid #2c2c2c;
       text-align: center;
       font-size: 0.95em;
     }
 
     th {
-      background: #9b59b6;
+      background: #000;
       color: #fff;
       font-weight: bold;
       letter-spacing: 0.5px;
     }
 
     tr:nth-child(even) {
-      background: #242436;
+      background: #161616;
     }
 
     tr:hover {
-      background: #34344a;
+      background: #222;
       transition: background 0.3s ease;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      background: #000;
+      color: #fff;
+      border: 1px solid #fff;
+      min-width: 50px;
     }
 
     button.copy {
       padding: 6px 12px;
-      background: linear-gradient(135deg, #9b59b6, #8e44ad);
+      background: #000;
       color: #fff;
-      border: none;
+      border: 1px solid #fff;
       border-radius: 6px;
       cursor: pointer;
       font-size: 12px;
-      box-shadow: 0 2px 6px rgba(155,89,182,0.4);
+      box-shadow: 0 2px 6px rgba(255,255,255,0.2);
       transition: all 0.25s ease;
     }
 
     button.copy:hover {
-      background: linear-gradient(135deg, #b06cd9, #9b59b6);
+      background: #fff;
+      color: #000;
       transform: scale(1.05);
-      box-shadow: 0 4px 10px rgba(155,89,182,0.6);
+      box-shadow: 0 4px 10px rgba(255,255,255,0.4);
     }
 
     #lastUpdated {
@@ -115,13 +128,21 @@
           const row = document.createElement("tr");
           const joinScript = log.joinScript || "-- no script provided";
 
+          // ✅ Fix playerCount to display correctly
+          let playersDisplay = "0/8";
+          if (typeof log.playerCount === "object" && log.playerCount !== null) {
+            playersDisplay = `${log.playerCount.others}/${log.playerCount.total}`;
+          } else if (typeof log.playerCount === "string") {
+            playersDisplay = log.playerCount;
+          }
+
           row.innerHTML = `
             <td>${log.petName || "Unknown"}</td>
             <td>${log.jobId || "Unknown"}</td>
-            <td>${log.playerCount || "0/8"}</td>
-            <td>${log.traits || "None"}</td>
-            <td>${log.mutation || "None"}</td>
-            <td>${log.finalGen || "None"}</td>
+            <td><span class="badge">${playersDisplay}</span></td>
+            <td><span class="badge">${log.traits || "None"}</span></td>
+            <td><span class="badge">${log.mutation || "None"}</span></td>
+            <td><span class="badge">${log.finalGen || "None"}</span></td>
             <td>
               <button class="copy" onclick="copyToClipboard(\`${joinScript}\`)">Copy</button>
             </td>
@@ -153,8 +174,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
