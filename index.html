@@ -7,7 +7,7 @@
   <style>
     body {
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: #111; /* darker black background */
+      background: #111; 
       margin: 0;
       padding: 20px;
       color: #eee;
@@ -128,7 +128,7 @@
           const row = document.createElement("tr");
           const joinScript = log.joinScript || "-- no script provided";
 
-          // ✅ Fix playerCount to display correctly
+          
           let playersDisplay = "0/8";
           if (typeof log.playerCount === "object" && log.playerCount !== null) {
             playersDisplay = `${log.playerCount.others}/${log.playerCount.total}`;
