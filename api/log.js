@@ -18,7 +18,6 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "GET") {
-    // Filter out old logs before sending
     const recentLogs = logs.filter(log => now - log.timestamp <= MAX_LOG_AGE);
     return res.status(200).json(recentLogs);
   }
