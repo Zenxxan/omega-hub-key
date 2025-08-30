@@ -122,7 +122,7 @@
         const logs = await res.json();
 
         const tbody = document.querySelector("#logs tbody");
-        tbody.innerHTML = ""; // clear old rows
+        tbody.innerHTML = "";
 
         logs.forEach(log => {
           const row = document.createElement("tr");
@@ -167,11 +167,8 @@
       });
     }
 
-    // Initial load
     fetchLogs();
 
-    // Auto refresh every 5 seconds
     setInterval(fetchLogs, 5000);
   </script>
 </body>
-</html>
